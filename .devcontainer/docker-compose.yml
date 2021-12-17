@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  terraform_workspace:
+    # Uncomment the next line to use a non-root user for all processes.
+    # See https://aka.ms/vscode-remote/containers/non-root for details.
+    user: vscode
+
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
+        USER_UID: 1000
+        USER_GID: 1000
+        PACKER_VERSION: "1.7.8"
+        TFLINT_VERSION: "0.34.0"
+        TERRAFORM_VERSION: "1.1.0"
+    volumes:
+      # mount the current workspace into the container
+      - ..:/workspace:cached
+
+      # store extensions in named volume to prevent reinstalling each time workspace is launched
+      # https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
+      - extensions:/home/vscode/.vscode-server/extensions
+      - extensions-insiders:/home/vscode/.vscode-server-insiders/extensions
+
+      # mount the host AWS creds/conf dir into the container
+      # WARNING: will use the [default] profile by...default
+        # ovverride for workspace with env vars below
+      - ~/.aws:/home/vscode/.aws:ro
+
+    # set AWS profile, TF vars etc
+    env_file: .workspace.env 
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+  
+volumes:
+  extensions:
+  extensions-insiders:

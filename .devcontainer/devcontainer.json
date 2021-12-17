@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.134.1/containers/docker-from-docker-compose
+{
+  "name": "Terraform workspace",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "terraform_workspace",
+  "workspaceFolder": "/workspace",
+  // Use this environment variable if you need to bind mount your local source code into a new container.
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+    "terminal.integrated.env.linux": {
+      "SHELL": "/bin/zsh"
+    },
+    "[terraform]": {
+      "editor.defaultFormatter": "hashicorp.terraform"
+    }
+  },
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "hashicorp.terraform",
+    "erd0s.terraform-autocomplete",
+    "ms-azuretools.vscode-docker",
+    "4ops.packer",
+    "mgtrrz.terraform-completer"
+  ],
+  // Uncomment the next line if you want start specific services in your Docker Compose config.
+  // "runServices": [],
+  // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
+  // "shutdownAction": "none",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postAttachCommand": "bash .devcontainer/script.sh",
+}
